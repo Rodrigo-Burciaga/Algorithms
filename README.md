@@ -1,2 +1,2 @@
-# Algorrithms
-Implementation of Data Structures, algorithms and competitions Codeforces, etc
+# Algorithms
+Implementation of Data Structures and algorithms from many sites like (Codeforces, atcoder, omegaup, GeeksforGeeks)
