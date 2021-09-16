@@ -41,33 +41,62 @@ int main(int argc, char const *argv[])
   }
 
 
-
+  // first: distance, second city arrived
   priority_queue<node, vector<node>, greater<node> > pq; 
-  pq.push(make_pair(0,0));
+  
+
+  int start = 0;
+  pq.push(make_pair(0,start));
+  distances[start][start] = 0;
+
+  for (int i = 0; i < p; ++i){
+  	int start = i;
+  	pq.push(make_pair(0,start));
+  	distances[start][start] = 0;
+
+  	while(!pq.empty()) {
+	    node actual_city = pq.top();
+	    pq.pop();
+	    if (visited[actual_city.second]) {
+	    	continue;
+	    }
+	    visited[actual_city.second] = true;
+	    vector<node> children = graph[actual_city.second];
+	    int actual_distance = actual_city.first;
+	    for(auto child: children){
+	    	int tent_distance = child.second + actual_distance;
+	    	if(!visited[child.first] && tent_distance <= distances[start][child.first]) {
+	        	pq.push(make_pair(tent_distance, child.first));
+		        distances[start][child.first] = tent_distance;
+		        distances[child.first][start] = tent_distance;
+      		}
+		}
+ 	}
+ 	fill(visited.begin(), visited.end(), false);
+
+  }
 
   
-  while(!pq.empty()) {
-    node actual_city = pq.top();
-    cout << "llegando a nodo " << actual_city.second + 1 << " con " << actual_city.first << endl;
-    pq.pop();
-    visited[actual_city.second] = true;
-    vector<node> children = graph[actual_city.second];
-    int actual_distance = actual_city.first;
-    for(auto child: children){
-      int tent_distance = child.second + actual_distance;
-      if(!visited[child.first] && tent_distance < distances[0][child.first]) {
-        pq.push(make_pair(tent_distance, child.first));
-        distances[0][child.first] = tent_distance;
-      }
-    }
+
+
+  float min = INT_MAX * 1.0;
+  int index_min;
+  for (int j = 0; j < p; ++j){
+  	float sum = 0.0;
+
+  	for(int i = 0; i < f ; ++i) {
+  		int d_city = demandant_cities[i] - 1;
+    	sum += distances[j][d_city];
+  	}
+  	sum /= f;
+  	if(sum < min) {
+  		index_min = j+1;
+  		min = sum;
+  	}
   }
 
 
-  for(int i = 0; i<p; ++i)
-    cout << distances[0][i] << " "; 
-
-
-
-
+  cout << index_min << endl;
+   
   return 0; 
 }
